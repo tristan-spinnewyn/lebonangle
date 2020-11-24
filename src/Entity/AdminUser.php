@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\AdminUserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AdminUserRepository::class)
  */
-class AdminUser
+class AdminUser implements UserInterface
 {
     /**
      * @ORM\Id
@@ -95,4 +96,18 @@ class AdminUser
         $this->plainPassword = $plainPassword;
     }
 
+    public function getRoles()
+    {
+        // TODO: Implement getRoles() method.
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
 }
