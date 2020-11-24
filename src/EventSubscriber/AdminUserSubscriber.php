@@ -25,7 +25,15 @@ class AdminUserSubscriber implements EventSubscriberInterface
 
     public function prePersist(LifecycleEventArgs $args): void
     {
-        $entity = $args->getEntity();
+        $this->setPassword($args->getEntity());
+    }
+
+    public function preUpdate(LifecycleEventArgs $args):void
+    {
+        $this->setPassword($args->getEntity());
+    }
+
+    private function setPassword($entity){
         if (!$entity instanceof AdminUser) {
             return;
         }
@@ -43,6 +51,7 @@ class AdminUserSubscriber implements EventSubscriberInterface
     {
         return [
             Events::prePersist,
+            Events::preUpdate
         ];
     }
 }
