@@ -1,0 +1,26 @@
+framework:
+    workflows:
+        comment:
+            type: state_machine
+            audit_trail:
+                enabled: '%kernel.debug%'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            supports:
+                - App\Entity\Advert
+            initial_marking: draft
+            place:
+                - draft
+                - published
+                - rejected
+            transitions:
+                publish:
+                    from: submitted
+                    to: published
+                reject:
+                    from: submitted
+                    to: rejected
+                moderate:
+                    from: published
+                    to: rejected
