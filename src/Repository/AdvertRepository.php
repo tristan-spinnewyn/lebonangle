@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Advert;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +19,20 @@ class AdvertRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Advert::class);
+    }
+
+    public function findByStatus($value){
+        try {
+            return $this->createQueryBuilder('a')
+                ->select('COUNT(a.id) as nb_advert')
+                ->andWhere('a.state = :val')
+                ->setParameter('val', $value)
+                ->getQuery()
+                ->getScalarResult();
+        }
+        catch (NonUniqueResultException|NoResultException $e) {
+            return 0;
+        }
     }
 
     // /**

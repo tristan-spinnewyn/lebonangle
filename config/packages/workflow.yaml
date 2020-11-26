@@ -1,6 +1,6 @@
 framework:
     workflows:
-        comment:
+        advert:
             type: state_machine
             audit_trail:
                 enabled: '%kernel.debug%'
