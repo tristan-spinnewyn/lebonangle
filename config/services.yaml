@@ -34,6 +34,6 @@ services:
         tags:
             - { name: 'doctrine.event_subscriber', connection: 'default' }
 
-    App\EventSubscriber\CreatedAtSubscriber:
+    App\EventSubscriber\AdvertAndPicturesSubscriber:
         tags:
             - { name: 'doctrine.event_subscriber', connection: 'default' }

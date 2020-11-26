@@ -9,9 +9,9 @@ framework:
                 property: 'state'
             supports:
                 - App\Entity\Advert
-            initial_marking: draft
+            initial_marking: submitted
             place:
-                - draft
+                - submitted
                 - published
                 - rejected
             transitions:
