@@ -98,7 +98,7 @@ class AdminUser implements UserInterface
 
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        return [];
     }
 
     public function getSalt()
