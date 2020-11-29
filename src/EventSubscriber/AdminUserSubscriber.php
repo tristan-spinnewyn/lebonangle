@@ -38,7 +38,7 @@ class AdminUserSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if($entity->getPlainPassword() !== '' || $entity->getPlainPassword() !== null){
+        if($entity->getPlainPassword() !== '' && $entity->getPlainPassword() !== null){
             $entity->setPassword( $encoded = $this->passwordEncoder->encodePassword(
                 $entity,
                 $entity->getPlainPassword()

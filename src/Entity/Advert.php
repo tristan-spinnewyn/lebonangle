@@ -69,7 +69,7 @@ class Advert
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $state;
+    private $state = 'submitted';
 
     /**
      * @ORM\Column(type="datetime")

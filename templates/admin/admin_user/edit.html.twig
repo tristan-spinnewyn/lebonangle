@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {% if app.request.get('id') is defined %}
+        Modification de l'utilisateur {{ user.username }}
+    {% else %}
+        Ajout d'un utilisateur
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <h1>
+        {% if app.request.get('id') is defined %}
+            Modification de l'utilisateur {{ user.username }}
+        {% else %}
+            Ajout d'un utilisateur
+        {% endif %}
+    </h1>
+    {{ form_start(formAdmin) }}
+    <div class="form-group">
+        <label for="admin_user_username">{{ form_label(formAdmin.username) }}</label>
+        {{ form_widget(formAdmin.username,{'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="admin_user_username">{{ form_label(formAdmin.email) }}</label>
+        {{ form_widget(formAdmin.email,{'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="admin_user_username">{{ form_label(formAdmin.plainPassword) }}</label>
+        {{ form_widget(formAdmin.plainPassword,{'attr': {'class': 'form-control'}}) }}
+    </div>
+    {{ form_widget(formAdmin.valider,{'attr': {'class': 'btn btn-primary'}}) }}
+    {{ form_end(formAdmin) }}
+{% endblock %}

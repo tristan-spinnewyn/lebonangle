@@ -6,6 +6,15 @@ use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Serializer\Filter\GroupFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
  *
@@ -31,8 +40,6 @@ class Picture
      */
     private ?string $path;
 
-
-
     /**
      * @ORM\Column(type="datetime")
      */
@@ -42,6 +49,30 @@ class Picture
      * @ORM\ManyToOne(targetEntity=Advert::class, inversedBy="pictures")
      */
     private $advert;
+
+    /**
+     * @var string|null
+     *
+     * @ApiProperty(iri="http://schema.org/contentUrl")
+     * @Groups({"media_object_read"})
+     */
+    public ?string $contentUrl;
+
+    /**
+     * @return string|null
+     */
+    public function getContentUrl(): ?string
+    {
+        return $this->contentUrl;
+    }
+
+    /**
+     * @param string|null $contentUrl
+     */
+    public function setContentUrl(?string $contentUrl): void
+    {
+        $this->contentUrl = $contentUrl;
+    }
 
     public function getId(): ?int
     {

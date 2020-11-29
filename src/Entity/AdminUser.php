@@ -21,7 +21,7 @@ class AdminUser implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $username;
+    private ?string $username = null;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -34,10 +34,10 @@ class AdminUser implements UserInterface
     private ?string $password;
 
     /**
-     * @var string
+     * @var string|null
      */
 
-    private string $plainPassword;
+    private ?string $plainPassword = null;
 
     public function getId(): ?int
     {
@@ -81,9 +81,9 @@ class AdminUser implements UserInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPlainPassword(): string
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
