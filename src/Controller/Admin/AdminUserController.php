@@ -92,12 +92,18 @@ class AdminUserController extends AbstractController
      * @param AdminUser $adminUser
      * @return Response
      */
-    public function delete(EntityManagerInterface $manager,Request $request, AdminUser $adminUser):Response
+    public function delete(EntityManagerInterface $manager,Request $request, AdminUser $adminUser, AdminUserRepository $repository):Response
     {
-        if ($this->isCsrfTokenValid('delete-user-'.$adminUser->getId(), $request->query->get('_token'))) {
-            $manager->remove($adminUser);
-            $manager->flush();
+        if($adminUser->getUsername() !== $this->getUser()->getUsername()){
+            if($repository->countAdminUser() > 1)
+            {
+                if ($this->isCsrfTokenValid('delete-user-'.$adminUser->getId(), $request->query->get('_token'))) {
+                    $manager->remove($adminUser);
+                    $manager->flush();
+                }
+            }
         }
+
         return $this->redirectToRoute('admin_user');
     }
 }

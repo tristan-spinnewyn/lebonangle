@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\AdminUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +19,18 @@ class AdminUserRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AdminUser::class);
+    }
+
+    public function countAdminUser()
+    {
+        try {
+            return $this->createQueryBuilder('a')
+                ->select('COUNT(a.id)')
+                ->getQuery()
+                ->getScalarResult();
+        }catch (NonUniqueResultException|NoResultException $e) {
+            return 0;
+        }
     }
 
     // /**
