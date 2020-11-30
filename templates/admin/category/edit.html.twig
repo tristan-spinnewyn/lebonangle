@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {% if category.id != null %}
+        Modification de la catégorie {{ category.name }}
+    {% else %}
+        Ajout d'une catégorie
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <h1>
+        {% if category.id != null %}
+            Modification de la catégorie {{ category.name }}
+        {% else %}
+            Ajout d'une catégorie
+        {% endif %}
+    </h1>
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {{ form_start(formCategory) }}
+    <div class="form-group">
+        <label for="category_name">{{ form_label(formCategory.name) }}</label>
+        {{ form_widget(formCategory.name,{'attr': {'class': 'form-control'}}) }}
+    </div>
+    {{ form_widget(formCategory.valider,{'attr': {'class': 'btn btn-primary'}}) }}
+    {{ form_end(formCategory) }}
+{% endblock %}

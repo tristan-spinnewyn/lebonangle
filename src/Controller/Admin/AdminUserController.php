@@ -29,24 +29,24 @@ class AdminUserController extends AbstractController
 
     /**
      * @Route("/admin/user/{id}", name="admin_user_edit")
+     * @param AdminUserRepository $repo
      * @param AdminUser $adminUser
      * @param EntityManagerInterface $manager
      * @param Request $request
-     * @param CsrfTokenManagerInterface $csrfTokenManager
      * @return Response
      */
 
-    public function edit(AdminUser $adminUser,EntityManagerInterface $manager, Request $request,CsrfTokenManagerInterface $csrfTokenManager):Response
+    public function edit(AdminUserRepository $repo, AdminUser $adminUser, EntityManagerInterface $manager, Request $request): Response
     {
-        $adminUserForm = $this->createForm(AdminUserType::class,$adminUser);
+        $adminUserForm = $this->createForm(AdminUserType::class, $adminUser);
 
         $adminUserForm->handleRequest($request);
-        if($adminUserForm->isSubmitted() &&$adminUserForm->isValid() ){
+        if ($adminUserForm->isSubmitted() && $adminUserForm->isValid()) {
             $entity = $adminUserForm->getData();
             $manager->persist($entity);
             $manager->flush();
 
-            $this->addFlash('success',sprintf('L\'utilisateur "%s" a bien été modifié',$adminUser->getUsername()));
+            $this->addFlash('success', sprintf('L\'utilisateur "%s" a bien été modifié', $adminUser->getUsername()));
 
             return $this->redirectToRoute('admin_user');
         }
@@ -63,21 +63,25 @@ class AdminUserController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function add(EntityManagerInterface $manager,Request $request):Response
+    public function add(EntityManagerInterface $manager, Request $request, AdminUserRepository $repo): Response
     {
         $adminUser = new AdminUser();
 
-        $adminUserForm = $this->createForm(AdminUserType::class,$adminUser);
+        $adminUserForm = $this->createForm(AdminUserType::class, $adminUser);
 
         $adminUserForm->handleRequest($request);
-        if($adminUserForm->isSubmitted() &&$adminUserForm->isValid() ){
-            $manager->persist($adminUser);
-            $manager->flush();
-
-            $this->addFlash('success',sprintf('L\'utilisateur "%s" a bien été ajouté',$adminUser->getUsername()));
-
-            return $this->redirectToRoute('admin_user');
+        if ($adminUserForm->isSubmitted() && $adminUserForm->isValid()) {
+            $existUserAdmin = $repo->findOneBy(['username' => $adminUser->getUsername()]);
+            if ($existUserAdmin === null) {
+                $manager->persist($adminUser);
+                $manager->flush();
+                $this->addFlash('success', sprintf('L\'utilisateur "%s" a bien été ajouté', $adminUser->getUsername()));
+                return $this->redirectToRoute('admin_user');
+            } else {
+                $this->addFlash('error', sprintf('L\'utilisateur "%s" ne peux être ajouté car il existe déjà', $adminUser->getUsername()));
+            }
         }
+
 
         return $this->render('admin/admin_user/edit.html.twig', [
             'formAdmin' => $adminUserForm->createView(),
@@ -90,18 +94,26 @@ class AdminUserController extends AbstractController
      * @param EntityManagerInterface $manager
      * @param Request $request
      * @param AdminUser $adminUser
+     * @param AdminUserRepository $repository
      * @return Response
      */
-    public function delete(EntityManagerInterface $manager,Request $request, AdminUser $adminUser, AdminUserRepository $repository):Response
+    public function delete(EntityManagerInterface $manager, Request $request, AdminUser $adminUser, AdminUserRepository $repository): Response
     {
-        if($adminUser->getUsername() !== $this->getUser()->getUsername()){
-            if($repository->countAdminUser() > 1)
-            {
-                if ($this->isCsrfTokenValid('delete-user-'.$adminUser->getId(), $request->query->get('_token'))) {
+        if ($adminUser->getUsername() !== $this->getUser()->getUsername()) {
+            if ($repository->countAdminUser()[0]['nbUser'] > 1) {
+                if ($this->isCsrfTokenValid('delete-user-' . $adminUser->getId(), $request->query->get('_token'))) {
                     $manager->remove($adminUser);
                     $manager->flush();
+
+                    $this->addFlash('success', 'L\'utilisateur a bien été supprimé !');
+                } else {
+                    $this->addFlash('error', 'Erreur de token csrf, veuillez réessayer.');
                 }
+            } else {
+                $this->addFlash('error', 'Vous devez laissez un compte admin obligatoirement.');
             }
+        } else {
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer votre compte');
         }
 
         return $this->redirectToRoute('admin_user');

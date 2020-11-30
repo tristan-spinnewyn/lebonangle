@@ -25,7 +25,7 @@ class AdminUserRepository extends ServiceEntityRepository
     {
         try {
             return $this->createQueryBuilder('a')
-                ->select('COUNT(a.id)')
+                ->select('COUNT(a.id) as nbUser')
                 ->getQuery()
                 ->getScalarResult();
         }catch (NonUniqueResultException|NoResultException $e) {

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}
-    {% if app.request.get('id') is defined %}
+    {% if user.id != null %}
         Modification de l'utilisateur {{ user.username }}
     {% else %}
         Ajout d'un utilisateur
@@ -8,12 +8,17 @@
 {% endblock %}
 {% block body %}
     <h1>
-        {% if app.request.get('id') is defined %}
+        {% if user.id != null %}
             Modification de l'utilisateur {{ user.username }}
         {% else %}
             Ajout d'un utilisateur
         {% endif %}
     </h1>
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
     {{ form_start(formAdmin) }}
     <div class="form-group">
         <label for="admin_user_username">{{ form_label(formAdmin.username) }}</label>

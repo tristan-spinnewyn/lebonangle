@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Advert;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -31,6 +32,20 @@ class AdvertRepository extends ServiceEntityRepository
                 ->getScalarResult();
         }
         catch (NonUniqueResultException|NoResultException $e) {
+            return 0;
+        }
+    }
+
+    public function countAdvertInCategory(Category $category)
+    {
+        try {
+            return $this->createQueryBuilder('advert')
+                ->select('COUNT(advert.id) as nbAdvert')
+                ->where('advert.category = :category')
+                ->setParameter('category',$category)
+                ->getQuery()
+                ->getScalarResult();
+        }catch (NonUniqueResultException|NoResultException $e) {
             return 0;
         }
     }
