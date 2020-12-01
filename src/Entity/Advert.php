@@ -26,7 +26,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *     denormalizationContext={"groups"={"advert:write"}}
  * )
  *
- *  @ApiFilter(OrderFilter::class, properties={"createdAt", "price"}, arguments={"orderParameterName"="order"})
+ *  @ApiFilter(OrderFilter::class, properties={"publishedAt", "price"}, arguments={"orderParameterName"="order"})
  *  @ApiFilter(RangeFilter::class, properties={"price"})
  * @ApiFilter(SearchFilter::class, properties={"category.id": "exact"})
  *
