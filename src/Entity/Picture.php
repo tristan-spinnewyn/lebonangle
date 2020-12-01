@@ -13,11 +13,47 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Serializer\Filter\GroupFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\CreateMediaObjectAction;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
- *
+ * @ApiResource(
+ *     iri="http://schema.org/MediaObject",
+ *     normalizationContext={
+ *         "groups"={"media_object_read"}
+ *     },
+ *     collectionOperations={
+ *         "post"={
+ *             "controller"=CreateMediaObjectAction::class,
+ *             "deserialize"=false,
+ *             "validation_groups"={"Default", "media_object_create"},
+ *             "openapi_context"={
+ *                 "requestBody"={
+ *                     "content"={
+ *                         "multipart/form-data"={
+ *                             "schema"={
+ *                                 "type"="object",
+ *                                 "properties"={
+ *                                     "file"={
+ *                                         "type"="string",
+ *                                         "format"="binary"
+ *                                     }
+ *                                 }
+ *                             }
+ *                         }
+ *                     }
+ *                 }
+ *             }
+ *         },
+ *         "get"
+ *     },
+ *     itemOperations={
+ *         "get"
+ *     }
+ * )
  * @Vich\Uploadable()
  */
 class Picture
@@ -30,7 +66,8 @@ class Picture
     private $id;
 
     /**
-     * @Vich\UploadableField(mapping="advertImage", fileNameProperty="path")
+     * @Assert\NotNull(groups={"media_object_create"})
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="path")
      */
 
     private ?File $file = null;

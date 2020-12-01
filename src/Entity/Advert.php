@@ -8,8 +8,28 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+
+
 
 /**
+ * @ApiResource(
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={"get"},
+ *     normalizationContext={"groups"={"advert:read"}},
+ *     denormalizationContext={"groups"={"advert:write"}}
+ * )
+ *
+ *  @ApiFilter(OrderFilter::class, properties={"createdAt", "price"}, arguments={"orderParameterName"="order"})
+ *  @ApiFilter(RangeFilter::class, properties={"price"})
+ * @ApiFilter(SearchFilter::class, properties={"category.id": "exact"})
+ *
  * @ORM\Entity(repositoryClass=AdvertRepository::class)
  */
 class Advert
@@ -18,6 +38,8 @@ class Advert
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Groups({"advert:read"})
      */
     private $id;
 
@@ -29,6 +51,8 @@ class Advert
      *      maxMessage = "Your title cannot be longer than {{ limit }} characters",
      * )
      * @ORM\Column(type="string", length=100)
+     *
+     * @Groups({"advert:read", "advert:write"})
      */
     private $title;
 
@@ -36,22 +60,31 @@ class Advert
      * @ORM\Column(type="text")
      *
      * @Assert\Length(max="1200",maxMessage = "Your content cannot be longer than {{ limit }} characters",)
+     *
+     * @Groups({"advert:read", "advert:write"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Groups({"advert:read", "advert:write"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Groups({"advert:read", "advert:write"})
+     *
      */
     private $email;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="adverts")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups({"advert:read", "advert:write"})
      */
     private $category;
 
@@ -63,26 +96,36 @@ class Advert
      *      max = 1000000,
      *      notInRangeMessage = "The price must be between {{ min }}€ and {{ max }}€",
      * )
+     *
+     * @Groups({"advert:read", "advert:write"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Groups({"advert:read"})
      */
     private $state = 'submitted';
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Groups({"advert:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @Groups({"advert:read"})
      */
     private $publishedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="advert")
+     *
+     * @Groups({"advert:read", "advert:write"})
      */
     private $pictures;
 

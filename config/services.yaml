@@ -37,3 +37,7 @@ services:
     App\EventSubscriber\AdvertAndPicturesSubscriber:
         tags:
             - { name: 'doctrine.event_subscriber', connection: 'default' }
+
+    App\EventSubscriber\ResolvePictureContentUrlSubscriber:
+        tags:
+            - { name: 'EventDispatcher.event_subscriber', connection: 'default'}
