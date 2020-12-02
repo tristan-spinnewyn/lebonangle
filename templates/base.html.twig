@@ -20,8 +20,16 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('admin_category') }}">Categorie</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Annonce</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Annonces
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ path("admin_advert") }}">Voir les annonces</a>
+                        <a class="dropdown-item" href="{{ path('admin_advert_published') }}">Annonce publié</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path('admin_advert_draft') }}">Annonce en attente</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('admin_user') }}">Gestion des admins</a>

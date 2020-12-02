@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdvertController!{% endblock %}
+
+{% block body %}
+    <h1>{{ title }}</h1>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Titre</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Autheur</th>
+            <th scope="col">State</th>
+            <th scope="col">Créer le</th>
+            <th scope="col">Nombre d'image</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for advert in adverts %}
+            <tr>
+                <td>{{ advert.id }}</td>
+                <td>{{ advert.title }}</td>
+                <td>{{ advert.category.name }}</td>
+                <td>{{ advert.author }}</td>
+                <td>{{ advert.state }}</td>
+                <td>{{ advert.createdAt | date('d-m-Y à h:i:s')}}</td>
+                <td>{{ advert.pictures | length }}</td>
+                <td>
+                    <a role="button" href="" class="btn btn-primary">Voir</a>
+                    {% if advert.state == 'draft' %}
+                        <a role="button" href="{{ path('admin_comment_change_state',{id:advert.id,transition:'publish'}) }}" class="btn btn-primary">Valider</a>
+                        <a role="button" href="{{ path('admin_comment_change_state',{id:advert.id,transition:'reject'}) }}" onclick="return confirm('Etes vous sur de vouloir rejeter l\'annonce ?')" class="btn btn-danger" href="">Rejeter</a>
+                    {% endif %}
+                    {% if advert.state == 'published' %}
+                        <a role="button" href="{{ path('admin_comment_change_state',{id:advert.id,transition:'moderate'}) }}" onclick="return confirm('Etes vous sur de vouloir rejeter l\'annonce ?')" class="btn btn-danger" href="">Rejeter</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

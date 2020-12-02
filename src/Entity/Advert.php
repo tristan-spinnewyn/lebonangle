@@ -106,7 +106,7 @@ class Advert
      *
      * @Groups({"advert:read"})
      */
-    private $state = 'submitted';
+    private $state = 'draft';
 
     /**
      * @ORM\Column(type="datetime")

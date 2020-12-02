@@ -9,17 +9,17 @@ framework:
                 property: 'state'
             supports:
                 - App\Entity\Advert
-            initial_marking: submitted
+            initial_marking: draft
             place:
-                - submitted
+                - draft
                 - published
                 - rejected
             transitions:
                 publish:
-                    from: submitted
+                    from: draft
                     to: published
                 reject:
-                    from: submitted
+                    from: draft
                     to: rejected
                 moderate:
                     from: published

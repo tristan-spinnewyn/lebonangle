@@ -16,7 +16,7 @@ class AdminController extends AbstractController
      */
     public function index(AdvertRepository $repository): Response
     {
-        $advertSubmitted = $repository->findByStatus('submitted');
+        $advertSubmitted = $repository->findByStatus('draft');
         return $this->render('admin/index.html.twig', [
             'controller_name' => 'AdminController',
             'numberAdvertSubmitted' => $advertSubmitted
