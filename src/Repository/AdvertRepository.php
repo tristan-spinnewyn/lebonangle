@@ -22,7 +22,7 @@ class AdvertRepository extends ServiceEntityRepository
         parent::__construct($registry, Advert::class);
     }
 
-    public function findByStatus($value){
+    public function countByStatus($value){
         try {
             return $this->createQueryBuilder('a')
                 ->select('COUNT(a.id) as nb_advert')
@@ -50,32 +50,38 @@ class AdvertRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Advert[] Returns an array of Advert objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+    public function getPaginateAdmin(int $page){
+        return $this
+            ->createQueryBuilder('advert')
+            ->setFirstResult(30*($page-1))
+            ->setMaxResults(30)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Advert
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
+    public function getPaginateAdminByState(int $page, string $state,string $orderEnt, string $order){
+        return $this
+            ->createQueryBuilder('advert')
+            ->andWhere('advert.state = :val')
+            ->setParameter('val', $state)
+            ->setFirstResult(30*($page-1))
+            ->setMaxResults(30)
+            ->orderBy($orderEnt, $order)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function countPaginateAdmin()
+    {
+        try{
+            return $this
+                ->createQueryBuilder('advert')
+                ->select('COUNT(advert.id) as nb_advert')
+                ->getQuery()
+                ->getScalarResult();
+        } catch (NonUniqueResultException|NoResultException $e){
+            return 0;
+        }
+
+    }
 }

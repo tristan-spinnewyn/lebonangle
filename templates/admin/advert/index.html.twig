@@ -51,4 +51,26 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if (page  >  1) %}
+        <div class="col-12 text-right">
+            {% if type == 'all' %}
+                <a href="{{ path('admin_advert', {'p': page - 1}) }}" class="btn btn-outline-primary">Prev</a>
+            {% elseif type == 'draft' %}
+                <a href="{{ path('admin_advert_draft', {'p': page - 1}) }}" class="btn btn-outline-primary">Prev</a>
+            {% else %}
+                <a href="{{ path('admin_advert_published', {'p': page - 1}) }}" class="btn btn-outline-primary">Prev</a>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if (page * 30 <  nbAdvert[0].nb_advert) %}
+        <div class="col-12 text-right">
+            {% if type == 'all' %}
+                <a href="{{ path('admin_advert', {'p': page + 1}) }}" class="btn btn-outline-primary">Next</a>
+            {% elseif type == 'draft' %}
+                <a href="{{ path('admin_advert_draft', {'p': page + 1}) }}" class="btn btn-outline-primary">Next</a>
+            {% else %}
+                <a href="{{ path('admin_advert_published', {'p': page + 1}) }}" class="btn btn-outline-primary">Next</a>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
