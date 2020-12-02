@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdvertController!{% endblock %}
+{% block title %}Gestion des annonces{% endblock %}
 
 {% block body %}
     <h1>{{ title }}</h1>
@@ -38,7 +38,7 @@
                 <td>{{ advert.createdAt | date('d-m-Y à h:i:s')}}</td>
                 <td>{{ advert.pictures | length }}</td>
                 <td>
-                    <a role="button" href="" class="btn btn-primary">Voir</a>
+                    <a role="button" href="{{ path('admin_show_advert',{id:advert.id}) }}" class="btn btn-primary">Voir</a>
                     {% if advert.state == 'draft' %}
                         <a role="button" href="{{ path('admin_comment_change_state',{id:advert.id,transition:'publish'}) }}" class="btn btn-primary">Valider</a>
                         <a role="button" href="{{ path('admin_comment_change_state',{id:advert.id,transition:'reject'}) }}" onclick="return confirm('Etes vous sur de vouloir rejeter l\'annonce ?')" class="btn btn-danger" href="">Rejeter</a>

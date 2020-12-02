@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonce - {{ advert.title }} {% endblock %}
+
+{% block body %}
+    <h1>Annonce - {{ advert.title }}</h1>
+    <h6>Catégorie: {{ advert.category.name }}</h6>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+        {% for picture in advert.pictures %}
+            <div class="col">
+                <img src="{{ vich_uploader_asset(picture, 'file') }}" alt="..." class="img-thumbnail">
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        prix: {{ advert.price }} €
+    </div>
+    <div class="row">
+        Description:
+    </div>
+    <div class="row">
+        {{ advert.content }}
+    </div>
+    <div class="row row-cols-1">
+        <div class="col"><p>Crée le {{ advert.createdAt | date('d-m-Y à h:i:s') }} par {{ advert.author }}
+                (contact: {{ advert.email }})</p></div>
+        <div class="col"><p>Statut actuelle : {{ advert.state }}</p></div>
+    </div>
+
+    <div class="row row-cols-2">
+        {% if advert.state == 'draft' %}
+            <div class="col"><a role="button"
+                                href="{{ path('admin_comment_change_state',{id:advert.id,transition:'publish'}) }}"
+                                class="btn btn-primary">Valider</a></div>
+            <div class="col"><a role="button"
+                                href="{{ path('admin_comment_change_state',{id:advert.id,transition:'reject'}) }}"
+                                onclick="return confirm('Etes vous sur de vouloir rejeter l\'annonce ?')"
+                                class="btn btn-danger" href="">Rejeter</a></div>
+        {% endif %}
+        {% if advert.state == 'published' %}
+            <div class="col"><a role="button"
+                                href="{{ path('admin_comment_change_state',{id:advert.id,transition:'moderate'}) }}"
+                                onclick="return confirm('Etes vous sur de vouloir rejeter l\'annonce ?')"
+                                class="btn btn-danger" href="">Rejeter</a></div>
+        {% endif %}
+    </div>
+{% endblock %}

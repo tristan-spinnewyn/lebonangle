@@ -72,4 +72,14 @@ class AdvertController extends AbstractController
 
         return $this->redirectToRoute('admin_advert');
     }
+
+    /**
+     * @Route("/admin/advert/{id}", name="admin_show_advert")
+     */
+
+    public function showAdvert(Advert $advert){
+        return $this->render('admin/advert/show.html.twig', [
+            'advert' => $advert,
+        ]);
+    }
 }
