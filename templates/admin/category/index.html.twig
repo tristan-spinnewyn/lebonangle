@@ -36,4 +36,14 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if (page  >  1) %}
+        <div class="col-12 text-right">
+            <a href="{{ path('admin_category', {'p': page - 1}) }}" class="btn btn-outline-primary">Prev</a>
+        </div>
+    {% endif %}
+    {% if (page * 30 <  categoryCount[0].nb_category) %}
+        <div class="col-12 text-right">
+            <a href="{{ path('admin_category', {'p': page + 1}) }}" class="btn btn-outline-primary">Next</a>
+        </div>
+    {% endif %}
 {% endblock %}

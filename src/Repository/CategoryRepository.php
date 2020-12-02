@@ -21,6 +21,28 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    public function countPaginateAdmin()
+    {
+        try{
+            return $this
+                ->createQueryBuilder('category')
+                ->select('COUNT(category.id) as nb_category')
+                ->getQuery()
+                ->getScalarResult();
+        } catch (NonUniqueResultException|NoResultException $e){
+            return 0;
+        }
+    }
+
+    public function getPaginateAdmin(int $page){
+        return $this
+            ->createQueryBuilder('advert')
+            ->setFirstResult(30*($page-1))
+            ->setMaxResults(30)
+            ->getQuery()
+            ->getResult();
+    }
+
 
 
     // /**

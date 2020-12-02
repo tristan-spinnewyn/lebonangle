@@ -17,13 +17,19 @@ class CategoryController extends AbstractController
 {
     /**
      * @Route("/admin/category", name="admin_category")
+     * @param Request $request
      * @param CategoryRepository $repo
      * @return Response
      */
-    public function index(CategoryRepository $repo): Response
+    public function index(Request $request,CategoryRepository $repo): Response
     {
+        $page = $request->query->getInt('p', 1);
+        $categoryCount = $repo->countPaginateAdmin();
+
         return $this->render('admin/category/index.html.twig', [
-            'categories' => $repo->findAll(),
+            'categories' => $repo->getPaginateAdmin($page),
+            'page' => $page,
+            'categoryCount' => $categoryCount
         ]);
     }
 
