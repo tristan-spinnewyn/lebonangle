@@ -10,7 +10,7 @@ use Symfony\Component\Notifier\Notification\EmailNotificationInterface;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Notifier\Recipient\Recipient;
 
-class PublishedAdvertNotification extends Notification implements EmailNotificationInterface
+class CreatedAdvertNotification extends Notification implements EmailNotificationInterface
 {
     private Advert $advert;
 
@@ -18,7 +18,7 @@ class PublishedAdvertNotification extends Notification implements EmailNotificat
     {
         $this->advert = $advert;
 
-        parent::__construct('Your advert published');
+        parent::__construct('An advert has published');
     }
 
     public function asEmailMessage(Recipient $recipient, string $transport = null): ?EmailMessage

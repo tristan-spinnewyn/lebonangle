@@ -1,0 +1,17 @@
+{% extends '@email/default/notification/body.html.twig' %}
+
+{% block content %}
+    title: {{ advert.title }}
+    <p>
+        {{ advert.content|nl2br }}
+    </p>
+
+    An advert has published by {{ advert.author }} ({{ advert.email }}) à {{ advert.createdAt|date('d-m-Y à h:i:s')}}
+{% endblock %}
+
+{% block action %}
+    <spacer size="16"></spacer>
+    <button href="{{ url('admin_show_advert', {'id': advert.id}) }}">Voir</button>
+    <button href="{{ url('admin_comment_change_state',{'id':advert.id,'transition':'publish'}) }}">Publié</button>
+    <button href="{{ url('admin_comment_change_state',{'id':advert.id,'transition':'reject'}) }}">Rejeter</button>
+{% endblock %}

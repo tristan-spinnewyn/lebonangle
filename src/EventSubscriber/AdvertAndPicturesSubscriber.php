@@ -3,11 +3,14 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\AdminUser;
 use App\Entity\Advert;
 use App\Entity\Picture;
 use App\Notification\PublishedAdvertNotification;
+use App\Repository\AdminUserRepository;
 use DateTime;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Component\Notifier\NotifierInterface;
@@ -27,6 +30,7 @@ class AdvertAndPicturesSubscriber implements EventSubscriber
         return [
             Events::prePersist,
             Events::preUpdate,
+            Events::postPersist
         ];
     }
 
@@ -52,6 +56,26 @@ class AdvertAndPicturesSubscriber implements EventSubscriber
                 $this->notifier->send(new PublishedAdvertNotification($entity), new Recipient($entity->getEmail()));
             }
         }
+    }
 
+    public function postPersist(LifecycleEventArgs $args):void
+    {
+        $entity = $args->getEntity();
+
+
+        if(!$entity instanceof Advert){
+            return;
+        }
+
+
+        $entityManager = $args->getEntityManager();
+        $repo = $entityManager->getRepository(AdminUser::class);
+        $adminUser = $repo->findAll();
+        $emailsAdmin = [];
+        foreach($adminUser as $user){
+            array_push($emailsAdmin, new Recipient($user->getEmail()));
+        }
+
+        $this->notifier->send(new PublishedAdvertNotification($entity), ...$emailsAdmin);
     }
 }
